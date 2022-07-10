@@ -26,9 +26,7 @@
 
 #include "../gcode.h"
 
-#if ENABLED(DWIN_CREALITY_LCD_JYERSUI)
-  #include "../../lcd/e3v2/jyersui/dwin.h"
-#elif ENABLED(DWIN_CREALITY_LCD_ALEXQZDUI)
+if ENABLED(DWIN_CREALITY_LCD_ALEXQZDUI)
   #include "../../lcd/e3v2/alexqzdui/dwin.h"
 #endif
 
@@ -73,7 +71,6 @@ void GcodeSuite::M575() {
 
       if (set1) {
         MYSERIAL1.end(); MYSERIAL1.begin(baud);
-        TERN_(DWIN_CREALITY_LCD_JYERSUI, eeprom_settings.Baud115k = (baud == 115200));
         TERN_(DWIN_CREALITY_LCD_ALEXQZDUI, eeprim_settings.Baud115k = (baud == 115200));
       }
       #if HAS_MULTI_SERIAL

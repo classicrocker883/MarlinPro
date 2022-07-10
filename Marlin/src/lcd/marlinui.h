@@ -32,10 +32,6 @@
   #include "tft_io/touch_calibration.h"
 #endif
 
-#if ANY(HAS_MARLINUI_MENU, ULTIPANEL_FEEDMULTIPLY, SOFT_RESET_ON_KILL)
-  #define HAS_ENCODER_ACTION 1
-#endif
-
 #if E_MANUAL > 1
   #define MULTI_E_MANUAL 1
 #endif
@@ -89,7 +85,7 @@ typedef bool (*statusResetFunc_t)();
 
 #endif // HAS_WIRED_LCD
 
-#if ANY(HAS_WIRED_LCD, DWIN_CREALITY_LCD_JYERSUI, DWIN_CREALITY_LCD_ALEXQZDUI)
+#if EITHER(HAS_WIRED_LCD, DWIN_CREALITY_LCD_ALEXQZDUI)
   #define LCD_UPDATE_INTERVAL TERN(HAS_TOUCH_BUTTONS, 50, 100)
 #endif
 
@@ -273,8 +269,8 @@ public:
   #endif
 
   #if LCD_BACKLIGHT_TIMEOUT
-    #define LCD_BKL_TIMEOUT_MIN 1
-    #define LCD_BKL_TIMEOUT_MAX (60*60*18) // 18 hours max within uint16_t
+    #define LCD_BKL_TIMEOUT_MIN 1u
+    #define LCD_BKL_TIMEOUT_MAX UINT16_MAX // Slightly more than 18 hours
     static uint16_t lcd_backlight_timeout;
     static millis_t backlight_off_ms;
     static void refresh_backlight_timeout();
@@ -393,7 +389,7 @@ public:
       static void poweroff();
     #endif
 
-    #if ANY(HAS_WIRED_LCD, DWIN_CREALITY_LCD_JYERSUI, DWIN_CREALITY_LCD_ALEXQZDUI)
+    #if EITHER(HAS_WIRED_LCD, DWIN_CREALITY_LCD_ALEXQZDUI)
       static bool get_blink();
     #endif
 
@@ -630,7 +626,7 @@ public:
     static bool use_click() { return false; }
   #endif
 
-  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI, DWIN_CREALITY_LCD_JYERSUI, DWIN_CREALITY_LCD_ALEXQZDUI)
+  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI, DWIN_CREALITY_LCD_ALEXQZDUI)
     static void pause_show_message(const PauseMessage message, const PauseMode mode=PAUSE_MODE_SAME, const uint8_t extruder=active_extruder);
   #else
     static void _pause_show_message() {}

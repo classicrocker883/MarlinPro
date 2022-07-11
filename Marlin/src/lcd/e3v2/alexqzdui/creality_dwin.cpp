@@ -4873,8 +4873,8 @@ bool CrealityDWINClass::find_and_decode_gcode_preview(char *name, uint8_t previe
   card.setIndex(card.getIndex()+data_read);
   char key[31] = "";
   switch (preview_type) {
-    case Thumnail_Icon: strcpy_P(key, "; jpeg thumbnail begin 50x50"); break;
-    case Thumnail_Preview: strcpy_P(key, "; jpeg thumbnail begin 217x217"); break;
+    case Thumnail_Icon: strcpy_P(key, "; thumbnail begin 50x50"); break;
+    case Thumnail_Preview: strcpy_P(key, "; thumbnail begin 217x217"); break;
   }
   while(n_reads < 16 && data_read) { // Max 16 passes so we don't loop forever
   if (Encoder_ReceiveAnalyze() != ENCODER_DIFF_NO) return false;

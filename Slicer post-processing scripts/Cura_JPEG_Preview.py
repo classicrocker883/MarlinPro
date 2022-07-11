@@ -54,7 +54,7 @@ class Cura_JPEG_Preview(Script):
 
         encoded_snapshot_length = len(encoded_snapshot)
         gcode.append(";")
-        gcode.append("; jpeg thumbnail begin {}x{} {}".format(
+        gcode.append("; thumbnail begin {}x{} {}".format(
             width, height, encoded_snapshot_length))
 
         chunks = ["; {}".format(encoded_snapshot[i:i+chunk_size])

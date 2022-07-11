@@ -53,7 +53,7 @@ for idx, match in enumerate(thumb_matches):
     new_size = size_match.replace(size[0], str(len(encodedjpg)))
     lines = lines.replace(size_match, new_size)
 
-lines = lines.replace("; thumbnail begin", "; jpeg thumbnail begin")
+# lines = lines.replace("; thumbnail begin", "; jpeg thumbnail begin")
 
 # destFile = re.sub('\.gcode$','',sourceFile)
 # # os.rename(sourceFile,destFile+".bak")

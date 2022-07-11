@@ -64,6 +64,10 @@
   #define strcasecmp_P(a, b) strcasecmp((a), (b))
 #endif
 
+#ifdef BLTOUCH_HS_MODE
+  #include "../../feature/bltouch.h"
+#endif
+
 #if HAS_LEVELING
   #include "../../feature/bedlevel/bedlevel.h"
 #endif
@@ -1033,7 +1037,8 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
       #define PREPARE_MOVE (PREPARE_BACK + 1)
       #define PREPARE_DISABLE (PREPARE_MOVE + 1)
       #define PREPARE_HOME (PREPARE_DISABLE + 1)
-      #define PREPARE_MANUALLEVEL (PREPARE_HOME + 1)
+      #define PREPARE_AUTO_Z_ALIGN (PREPARE_HOME + EITHER(Z_STEPPER_AUTO_ALIGN,MECHANICAL_GANTRY_CALIBRATION))
+      #define PREPARE_MANUALLEVEL (PREPARE_AUTO_Z_ALIGN + 1)
       #define PREPARE_ZOFFSET (PREPARE_MANUALLEVEL + ENABLED(HAS_ZOFFSET_ITEM))
       #define PREPARE_PREHEAT (PREPARE_ZOFFSET + ENABLED(HAS_PREHEAT))
       #define PREPARE_COOLDOWN (PREPARE_PREHEAT + ENABLED(HAS_PREHEAT))
@@ -1071,6 +1076,17 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
           }
           else {
             Draw_Menu(HomeMenu);
+          }
+          break;
+        case PREPARE_AUTO_Z_ALIGN:
+          if (draw) {
+            Draw_Menu_Item(row, ICON_MoveZ, FTOP(GET_TEXT_F(MSG_AUTO_Z_ALIGN)));
+          }
+          else {
+            Popup_Handler(AutoZAlign);
+            gcode.process_subcommands_now(F("G34"));
+            planner.synchronize();
+            Redraw_Menu();
           }
           break;
         case PREPARE_MANUALLEVEL:
@@ -3162,7 +3178,9 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
         #define PROBE_BACK 0
         #define PROBE_XOFFSET (PROBE_BACK + 1)
         #define PROBE_YOFFSET (PROBE_XOFFSET + 1)
-        #define PROBE_TEST (PROBE_YOFFSET + 1)
+        #define PROBE_HSMODE (PROBE_YOFFSET + ENABLED(BLTOUCH))
+        #define PROBE_SWMODE (PROBE_HSMODE + BOTH(BLTOUCH, BLTOUCH_FORCE_SW_MODE))
+        #define PROBE_TEST (PROBE_SWMODE + 1)
         #define PROBE_TEST_COUNT (PROBE_TEST + 1)
         #define PROBE_TOTAL PROBE_TEST_COUNT
 
@@ -3196,9 +3214,26 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                 Modify_Value(probe.offset.y, -MAX_XY_OFFSET, MAX_XY_OFFSET, 10);
               }
               break;
+            #if ENABLED(BLTOUCH)
+              case PROBE_HSMODE:
+                if (draw) {
+                  Draw_Menu_Item(row, ICON_StockConfiguraton, FTOP(GET_TEXT_F(MSG_ENABLE_HS_MODE)));
+                  Draw_Checkbox(row, bltouch.high_speed_mode);
+                }
+                else {
+                  bltouch.high_speed_mode = !bltouch.high_speed_mode;
+                  Draw_Checkbox(row, bltouch.high_speed_mode);
+                }
+                break;
+                #if ENABLED(BLTOUCH_FORCE_SW_MODE)
+                  case PROBE_SWMODE:
+                    Draw_Menu_Item(row, ICON_StockConfiguraton, FTOP(GET_TEXT_F(MSG_BLTOUCH_SW_MODE)));
+                  break;
+                #endif
+            #endif
             case PROBE_TEST:
               if (draw) {
-                Draw_Menu_Item(row, ICON_StepY, "M48 Probe Test");
+                Draw_Menu_Item(row, ICON_StepY,FTOP(GET_TEXT_F(MSG_M48_TEST)));
               }
               else {
                 sprintf_P(cmd, PSTR("G28O\nM48 X%s Y%s P%i"), dtostrf((X_BED_SIZE + X_MIN_POS)/2.0f, 1, 3, str_1), dtostrf((Y_BED_SIZE + Y_MIN_POS)/2.0f, 1, 3, str_2), testcount);
@@ -3207,7 +3242,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
               break;
             case PROBE_TEST_COUNT:
               if (draw) {
-                Draw_Menu_Item(row, ICON_StepY, "Probe Test Count");
+                Draw_Menu_Item(row, ICON_StepY, FTOP(GET_TEXT_F(MSG_M48_POINT)));
                 Draw_Float(testcount, row, false, 1);
               }
               else {
@@ -4552,6 +4587,8 @@ void CrealityDWINClass::Popup_Handler(PopupID popupid, bool option/*=false*/) {
     case Resuming:
       Draw_Popup("Resuming Print", "Please wait until done.", "", Wait, ICON_BLTouch);
       break;
+    case AutoZAlign:
+      Draw_Popup(FTOP(GET_TEXT_F(MSG_AUTO_Z_ALIGN)), FTOP(GET_TEXT_F(MSG_PLEASE_WAIT)), "", Wait, ICON_BLTouch);
     default:
       break;
   }

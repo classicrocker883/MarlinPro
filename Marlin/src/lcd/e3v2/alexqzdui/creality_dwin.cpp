@@ -1787,7 +1787,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                   thermalManager.wait_for_hotend(0);
                 }
                 Popup_Handler(FilLoad);
-                gcode.process_subcommands_now(PSTR("M701"));
+                gcode.process_subcommands_now(F("M701"));
                 planner.synchronize();
                 Redraw_Menu();
               }
@@ -1807,7 +1807,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                   thermalManager.wait_for_hotend(0);
                 }
                 Popup_Handler(FilLoad, true);
-                gcode.process_subcommands_now(PSTR("M702"));
+                gcode.process_subcommands_now(F("M702"));
                 planner.synchronize();
                 Redraw_Menu();
               }
@@ -3400,7 +3400,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                 #endif
               #elif HAS_BED_PROBE
                 Popup_Handler(Level);
-                gcode.process_subcommands_now(PSTR("G29"));
+                gcode.process_subcommands_now(F("G29"));
                 planner.synchronize();
                 Popup_Handler(SaveLevel);
               #else
@@ -3408,7 +3408,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                 set_bed_leveling_enabled(false);
                 gridpoint = 1;
                 Popup_Handler(MoveWait);
-                gcode.process_subcommands_now(PSTR("G29"));
+                gcode.process_subcommands_now(F("G29"));
                 planner.synchronize();
                 Draw_Menu(ManualMesh);
               #endif
@@ -3826,7 +3826,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                 mesh_conf.manual_move();
               }
               else {
-                gcode.process_subcommands_now(PSTR("G29 S"));
+                gcode.process_subcommands_now(F("G29 S"));
                 planner.synchronize();
                 AudioFeedback(true);
                 Draw_Menu(Leveling, LEVELING_GET_MESH);
@@ -3870,7 +3870,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             else {
               if (mesh_conf.mesh_z_values[mesh_conf.mesh_x][mesh_conf.mesh_y] < MAX_Z_OFFSET) {
                 mesh_conf.mesh_z_values[mesh_conf.mesh_x][mesh_conf.mesh_y] += 0.01;
-                gcode.process_subcommands_now(PSTR("M290 Z0.01"));
+                gcode.process_subcommands_now(F("M290 Z0.01"));
                 planner.synchronize();
                 current_position.z += 0.01f;
                 sync_plan_position();
@@ -3885,7 +3885,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             else {
               if (mesh_conf.mesh_z_values[mesh_conf.mesh_x][mesh_conf.mesh_y] > MIN_Z_OFFSET) {
                 mesh_conf.mesh_z_values[mesh_conf.mesh_x][mesh_conf.mesh_y] -= 0.01;
-                gcode.process_subcommands_now(PSTR("M290 Z-0.01"));
+                gcode.process_subcommands_now(F("M290 Z-0.01"));
                 planner.synchronize();
                 current_position.z -= 0.01f;
                 sync_plan_position();
@@ -3913,7 +3913,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
               Draw_Menu_Item(row, ICON_Back, "Cancel");
             }
             else {
-              gcode.process_subcommands_now(PSTR("G29 A"));
+              gcode.process_subcommands_now(F("G29 A"));
               planner.synchronize();
               set_bed_leveling_enabled(level_state);
               Draw_Menu(Leveling, LEVELING_GET_MESH);
@@ -3929,13 +3929,13 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             else {
               if (gridpoint < GRID_MAX_POINTS) {
                 Popup_Handler(MoveWait);
-                gcode.process_subcommands_now(PSTR("G29"));
+                gcode.process_subcommands_now(F("G29"));
                 planner.synchronize();
                 gridpoint++;
                 Redraw_Menu();
               }
               else {
-                gcode.process_subcommands_now(PSTR("G29"));
+                gcode.process_subcommands_now(F("G29"));
                 planner.synchronize();
                 AudioFeedback(settings.save());
                 Draw_Menu(Leveling, LEVELING_GET_MESH);
@@ -3958,7 +3958,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             }
             else {
               if (current_position.z < MAX_Z_OFFSET) {
-                gcode.process_subcommands_now(PSTR("M290 Z0.01"));
+                gcode.process_subcommands_now(F("M290 Z0.01"));
                 planner.synchronize();
                 current_position.z += 0.01f;
                 sync_plan_position();
@@ -3972,7 +3972,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             }
             else {
               if (current_position.z > MIN_Z_OFFSET) {
-                gcode.process_subcommands_now(PSTR("M290 Z-0.01"));
+                gcode.process_subcommands_now(F("M290 Z-0.01"));
                 planner.synchronize();
                 current_position.z -= 0.01f;
                 sync_plan_position();
@@ -4202,13 +4202,13 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
                     switch (last_selection) {
                       case CHANGEFIL_LOAD:
                         Popup_Handler(FilLoad);
-                        gcode.process_subcommands_now("M701");
+                        gcode.process_subcommands_now(F("M701"));
                         planner.synchronize();
                         Redraw_Menu(true, true, true);
                         break;
                       case CHANGEFIL_UNLOAD:
                         Popup_Handler(FilLoad, true);
-                        gcode.process_subcommands_now("M702");
+                        gcode.process_subcommands_now(F("M702"));
                         planner.synchronize();
                         Redraw_Menu(true, true, true);
                         break;

@@ -1671,8 +1671,8 @@
 #define X_MIN_POS -2.7
 #define Y_MIN_POS -3
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE - X_MIN_POS
-#define Y_MAX_POS Y_BED_SIZE - Y_MIN_POS
+#define X_MAX_POS X_BED_SIZE + X_MIN_POS
+#define Y_MAX_POS Y_BED_SIZE + Y_MIN_POS
 #define Z_MAX_POS 250
 //#define I_MIN_POS 0
 //#define I_MAX_POS 50
@@ -3116,9 +3116,9 @@
 //
 //#define DWIN_CREALITY_LCD           // Creality UI
 //#define DWIN_LCD_PROUI              // Pro UI by MRiscoC
-#define DWIN_CREALITY_LCD_ALEXQZDUI // Jyers UI by Alejandro Quezada 
+#define DWIN_CREALITY_LCD_ALEXQZDUI   // Jyers UI by Alejandro Quezada 
 //#define DWIN_MARLINUI_PORTRAIT      // MarlinUI (portrait orientation)
-//#define DWIN_MARLINUI_LANDSCAPE       // MarlinUI (landscape orientation)
+//#define DWIN_MARLINUI_LANDSCAPE     // MarlinUI (landscape orientation)
 
 #if ENABLED(DWIN_CREALITY_LCD_ALEXQZDUI)
   //

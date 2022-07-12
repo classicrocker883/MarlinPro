@@ -5499,4 +5499,12 @@ void CrealityDWINClass::Reset_Settings() {
   Redraw_Screen();
 }
 
+
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void CrealityDWINClass::Goto_FilamentPurge() {
+    pause_menu_response = PAUSE_RESPONSE_WAIT_FOR;
+    CrealityDWIN.Popup_Handler(PurgeMore);
+  }
+#endif
+
 #endif

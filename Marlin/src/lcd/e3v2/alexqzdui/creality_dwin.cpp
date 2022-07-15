@@ -1383,14 +1383,39 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
               if (use_probe) {
                 Popup_Handler(Level);
                 corner_avg = 0;
-                #define PROBE_X_MIN _MAX(0 + corner_pos, X_MIN_POS + probe.offset.x, X_MIN_POS + PROBING_MARGIN_LEFT) - probe.offset.x
-                #define PROBE_X_MAX _MIN((X_BED_SIZE + X_MIN_POS) - corner_pos, X_MAX_POS + probe.offset.x, X_MAX_POS - PROBING_MARGIN_RIGHT) - probe.offset.x
-                #define PROBE_Y_MIN _MAX(0 + corner_pos, Y_MIN_POS + probe.offset.y, Y_MIN_POS + PROBING_MARGIN_FRONT) - probe.offset.y
-                #define PROBE_Y_MAX _MIN((Y_BED_SIZE + Y_MIN_POS) - corner_pos, Y_MAX_POS + probe.offset.y, Y_MAX_POS - PROBING_MARGIN_BACK) - probe.offset.y
+                char msg[32];
+
+                // #define PROBE_X_MIN _MAX(corner_pos, (X_MIN_BED) + (PROBING_MARGIN_LEFT), (X_MIN_POS) + probe.offset.x) - probe.offset.x
+                // #define PROBE_X_MAX _MIN((X_BED_SIZE + X_MIN_POS) - corner_pos, (X_MAX_BED) - (PROBING_MARGIN_RIGHT), + X_MAX_POS + probe.offset.x) - probe.offset.x
+                // #define PROBE_Y_MIN _MAX(corner_pos, (Y_MIN_BED) + (PROBING_MARGIN_FRONT), (Y_MIN_POS) + probe.offset.y) - probe.offset.y
+                // #define PROBE_Y_MAX _MIN((Y_BED_SIZE + Y_MIN_POS) - corner_pos, (Y_MAX_BED) - (PROBING_MARGIN_BACK), Y_MAX_POS + probe.offset.y) - probe.offset.y
+           
+                // #define PROBE_X_MIN _MAX(0 + corner_pos, X_MIN_POS + probe.offset.x, X_MIN_POS + PROBING_MARGIN_LEFT) - probe.offset.x
+                // #define PROBE_X_MAX _MIN((X_BED_SIZE + X_MIN_POS) - corner_pos, X_MAX_POS + probe.offset.x, X_MAX_POS - PROBING_MARGIN_RIGHT) - probe.offset.x
+                // #define PROBE_Y_MIN _MAX(0 + corner_pos, Y_MIN_POS + probe.offset.y, Y_MIN_POS + PROBING_MARGIN_FRONT) - probe.offset.y
+                // #define PROBE_Y_MAX _MIN((Y_BED_SIZE + Y_MIN_POS) - corner_pos, Y_MAX_POS + probe.offset.y, Y_MAX_POS - PROBING_MARGIN_BACK) - probe.offset.y
+
+                #define PROBE_X_MIN _MAX(corner_pos, probe.min_x()) - probe.offset.x
+                #define PROBE_X_MAX _MIN((X_BED_SIZE + X_MIN_POS) - corner_pos, probe.max_x()) - probe.offset.x
+                #define PROBE_Y_MIN _MAX(corner_pos, probe.min_y()) - probe.offset.y
+                #define PROBE_Y_MAX _MIN((Y_BED_SIZE + Y_MIN_POS) - corner_pos, probe.max_y()) - probe.offset.y
+
+                sprintf(msg, "Probe 1 : X %s Y %s", dtostrf(PROBE_X_MIN, 1, 3, str_1), dtostrf(PROBE_Y_MIN, 1, 3, str_2));
+                CrealityDWIN.Update_Status(msg);
                 corner_avg += probe.probe_at_point(PROBE_X_MIN, PROBE_Y_MIN, PROBE_PT_RAISE, 0, false);
+
+                sprintf(msg, "Probe 2 : X %s Y %s", dtostrf(PROBE_X_MIN, 1, 3, str_1), dtostrf(PROBE_Y_MAX, 1, 3, str_2));
+                CrealityDWIN.Update_Status(msg);
                 corner_avg += probe.probe_at_point(PROBE_X_MIN, PROBE_Y_MAX, PROBE_PT_RAISE, 0, false);
+
+                sprintf(msg, "Probe 3 : X %s Y %s", dtostrf(PROBE_X_MAX, 1, 3, str_1), dtostrf(PROBE_Y_MAX, 1, 3, str_2));
+                CrealityDWIN.Update_Status(msg);
                 corner_avg += probe.probe_at_point(PROBE_X_MAX, PROBE_Y_MAX, PROBE_PT_RAISE, 0, false);
+
+                sprintf(msg, "Probe 4 : X %s Y %s", dtostrf(PROBE_X_MAX, 1, 3, str_1), dtostrf(PROBE_Y_MIN, 1, 3, str_2));
+                CrealityDWIN.Update_Status(msg);
                 corner_avg += probe.probe_at_point(PROBE_X_MAX, PROBE_Y_MIN, PROBE_PT_STOW, 0, false);
+
                 corner_avg /= 4;
                 Redraw_Menu();
               }

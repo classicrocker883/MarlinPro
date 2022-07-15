@@ -260,7 +260,7 @@ CrealityDWINClass CrealityDWIN;
       }
 
     #else
-      bed_mesh_t &mesh_z_values = z_values;
+      bed_mesh_t &mesh_z_values = bedlevel.z_values;
 
       void manual_value_update() {
         sprintf_P(cmd, PSTR("G29 I%i J%i Z%s"), mesh_x, mesh_y, dtostrf(current_position.z, 1, 3, str_1));
@@ -3690,7 +3690,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
             else {
               set_bed_leveling_enabled(level_state);
               #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-                refresh_bed_level();
+                bedlevel.refresh_bed_level();
               #endif
               Draw_Menu(Leveling, LEVELING_MANUAL);
             }

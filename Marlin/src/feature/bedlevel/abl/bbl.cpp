@@ -368,7 +368,7 @@ float LevelingBilinear::get_z_correction(const xy_pos_t &raw) {
 
 #if IS_CARTESIAN && DISABLED(SEGMENT_LEVELED_MOVES)
 
-  #define CELL_INDEX(A,V) ((V - grid_start.A) * ABL_BG_FACTOR(A))
+  #define CELL_INDEX(A,V) (static_cast<int8_t>((V - grid_start.A) * ABL_BG_FACTOR(A)))
 
   /**
    * Prepare a bilinear-leveled linear move on Cartesian,
@@ -394,7 +394,7 @@ float LevelingBilinear::get_z_correction(const xy_pos_t &raw) {
 
     float normalized_dist;
     xyze_pos_t end;
-    const xy_int8_t gc { _MAX(c1.x, c2.x), _MAX(c1.y, c2.y) };
+    const xy_int8_t gc { static_cast<int8_t>(_MAX(c1.x, c2.x)), static_cast<int8_t>(_MAX(c1.y, c2.y)) };
 
     // Crosses on the X and not already split on this X?
     // The x_splits flags are insurance against rounding errors.

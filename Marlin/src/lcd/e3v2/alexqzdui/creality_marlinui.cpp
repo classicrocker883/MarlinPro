@@ -43,7 +43,7 @@
         CrealityDWIN.Confirm_Handler(FilInsert);
         break;
       case PAUSE_MESSAGE_OPTION:
-        CrealityDWIN.Popup_Handler(PurgeMore);
+        CrealityDWIN.Goto_FilamentPurge();
         break;
       case PAUSE_MESSAGE_HEAT:
         CrealityDWIN.Confirm_Handler(HeaterTime);

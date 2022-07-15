@@ -382,6 +382,10 @@ public:
   void Load_Settings(const char *buff);
   void Reset_Settings();
 
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void Goto_FilamentPurge();
+#endif
+
 };
 
 extern CrealityDWINClass CrealityDWIN;

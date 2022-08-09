@@ -49,6 +49,8 @@ MarlinUI ui;
   #include "e3v2/creality/dwin.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "e3v2/proui/dwin.h"
+#elif ENABLED(DWIN_CREALITY_LCD_JYERSUI)
+  #include "e3v2/jyersui/dwin.h"
 #elif ENABLED(DWIN_CREALITY_LCD_ALEXQZDUI)
   #include "e3v2/alexqzdui/creality_dwin.h"
 #endif
@@ -153,7 +155,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   bool MarlinUI::lcd_clicked;
 #endif
 
-#if EITHER(HAS_WIRED_LCD, DWIN_CREALITY_LCD_ALEXQZDUI)
+#if ANY(HAS_WIRED_LCD, DWIN_CREALITY_LCD_JYERSUI, DWIN_CREALITY_LCD_ALEXQZDUI)
 
   bool MarlinUI::get_blink() {
     static uint8_t blink = 0;
@@ -1568,6 +1570,7 @@ void MarlinUI::init() {
     TERN_(EXTENSIBLE_UI, ExtUI::onStatusChanged(status_message));
     TERN_(DWIN_CREALITY_LCD, DWIN_StatusChanged(status_message));
     TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage());
+    TERN_(DWIN_CREALITY_LCD_JYERSUI, CrealityDWIN.Update_Status(status_message));
     TERN_(DWIN_CREALITY_LCD_ALEXQZDUI, CrealityDWIN.Update_Status(status_message));
   }
 

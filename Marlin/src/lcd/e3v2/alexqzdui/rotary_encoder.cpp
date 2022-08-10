@@ -39,7 +39,7 @@
 #include "../../marlinui.h"
 #include "../../HAL/shared/Delay.h"
 
-#if HAS_BUZZER
+#if HAS_SOUND
   #include "../../libs/buzzer.h"
   #include "creality_dwin.h"
 #endif
